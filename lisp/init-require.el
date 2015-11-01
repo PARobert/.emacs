@@ -7,7 +7,7 @@
 (require 'yasnippet)
 (require 'math-symbol-lists)
 (require 'show-keys)
-
+ 
 ;; ---- Company-mode ----
 (require 'company)
 (require 'company-auctex)
