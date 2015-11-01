@@ -84,10 +84,49 @@ emacs."
       (split-droite)
     (split-bas)))
 
-;; Déplacer une fenêtre
-;; (defun deplace-droite ()
-;;   "déplacer horizontalement la fenêtre à droite"
-;;   (interactive)
+(defun deplacer-fenetre-droite ()
+  "Déplacer horizontalement le buffer à droite"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-right)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-right))
+
+(defun deplacer-fenetre-gauche ()
+  "Déplacer horizontalement le buffer à gauche"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-left)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-left))
+
+(defun deplacer-fenetre-bas ()
+  "Déplacer verticalement le buffer vers le bas"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-down)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-down))
+
+(defun deplacer-fenetre-haut ()
+  "Déplacer verticalement le buffer vers le haut"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-up)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-up))
 
 (defun elargir-fenetre-horizontalement ()
   "Elargir horizontalement d'une colonne la fenêtre"
