@@ -24,6 +24,11 @@
 (global-set-key (kbd "<C-s-down>") 'retrecir-fenetre-verticalement)
 (global-set-key (kbd "<C-s-up>") 'elargir-fenetre-verticalement)
 
+(global-set-key (kbd "<M-s-right>") 'deplacer-fenetre-droite)
+(global-set-key (kbd "<M-s-left>") 'deplacer-fenetre-gauche)
+(global-set-key (kbd "<M-s-down>") 'deplacer-fenetre-bas)
+(global-set-key (kbd "<M-s-up>") 'deplacer-fenetre-haut)
+
 (global-set-key (kbd "C-c I") 'load-user-init-file)
 (global-set-key (kbd "C-c C-l") 'demarrer-command-log)
 (global-set-key (kbd "C-c C-b") 'compile-fenetre-actuelle)
