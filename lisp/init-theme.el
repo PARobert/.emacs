@@ -2,12 +2,6 @@
 (add-to-list 'load-path 
              "~/.emacs.d/color-theme"
              "~/.emacs.d/color-theme/themes")
-;; (eval-after-load "color-theme"
-;;   '(progn
-;;      (color-theme-initialize)
-;;      (setq color-theme-is-global t)
-;;      (color-theme-billw)))
-;; (color-theme-robin-hood)
 
 ;; Enlever l'affichage de l'écran d'acceuil au démarrage d'emacs.
 (setq inhibit-startup-screen 1)
@@ -34,12 +28,6 @@
 
 ;; Ajout automatique des crochets, parenthèses, guillemets, etc. fermants.
 (electric-pair-mode 1)
-
-;; Indiquer par une barre verticale la limite de la ligne
-;; (define-globalized-minor-mode
-;;   global-fci-mode fci-mode (lambda () (fci-mode 1)))
-;; (global-fci-mode t)
-;; (setq fci-rule-color "#626262")
 
 ;; Nom du buffer dans le titre
 (setq frame-title-format "%b - Emacs")
