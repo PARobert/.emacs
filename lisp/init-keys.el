@@ -32,6 +32,9 @@
 (global-set-key (kbd "C-c I") 'load-user-init-file)
 (global-set-key (kbd "C-c C-l") 'demarrer-command-log)
 (global-set-key (kbd "C-c C-b") 'compile-fenetre-actuelle)
+(global-set-key (kbd "C-c g") 'magit-status)
+(global-set-key (kbd "C-c C-t") 'windnew-terminal)
+
 
 ;; ---- Python-mode ----
 
@@ -47,8 +50,6 @@
 ;; ---- Company ----
 
 (global-set-key (kbd "\t") 'company-complete-common)
-;; (global-set-key (kbd "<tab>") 'indent-or-complete)
-
 
 ;; ---- C-mode ----
 
