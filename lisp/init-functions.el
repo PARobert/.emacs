@@ -71,11 +71,6 @@ emacs."
   (split-window-vertically)
   (switch-to-buffer "*scratch*"))
 
-(defun fermer-fenetre ()
-  "Fermer la fenêtre courante"
-  (interactive)
-  (delete-window))
-
 (defun split-auto ()
   "Spliter automatiquement la fenêtre"
   (interactive)
@@ -148,6 +143,53 @@ emacs."
   (interactive)
   (shrink-window 1))
 
+(defun fermer-fenetre ()
+  "Fermer la fenêtre courante"
+  (interactive)
+  (delete-window))
+
+;; --- Terminal ----
+
+(defun exist-terminal-p ()
+  "Renvoie t si le buffer *terminal* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*terminal*")))
+
+(defun ouverture-terminal ()
+  "Ouverture efficace d'un terminal"
+  (interactive)
+  (split-auto)
+  (term "bash")
+  (term-mode)
+  (term-char-mode)
+  (global-set-key (kbd "C-c t") 'fermeture-terminal))
+
+(defun aller-terminal ()
+  "Aller à la fenêtre de terminal"
+  (interactive)
+  (setq window (get-buffer-window "*terminal*"))
+  (select-window window))
+
+(defun windnew-terminal ()
+  "Recherche ou ouvre un terminal"
+  (interactive)
+  (if (exist-terminal-p)
+      (aller-terminal)
+    (ouverture-terminal)))
+
+(defun fermeture-terminal ()
+  "Fermeture efficace d'un terminal"
+  (interactive)
+  (term-send-string "*terminal*" "exit")
+  (kill-buffer-and-window)
+  (global-set-key (kbd "C-c C-t") 'ouverture-terminal))
+
+(defadvice fermeture-terminal (around stfu compile activate)
+  "Retirer la question 'un processus existe...' à l'exécution de fermeture-terminal"
+  (flet ((yes-or-no-p (&rest args) t)
+         (y-or-n-p (&rest args) t))
+    ad-do-it))
+
 ;; ---- Python ----
 
 (defun exist-ipython-p ()
@@ -167,6 +209,7 @@ emacs."
   (setq-local origin filename))
 
 (defun reload-ipython (&optional filename)
+  "Relancer le terminal ipython"
   (interactive)
   (setq window (get-buffer-window "*ipython*"))
   (if window
@@ -177,6 +220,12 @@ emacs."
       (setq filename origin))
   (kill-buffer)
   (load-ipython filename))
+
+(defadvice reload-ipython (around stfu compile activate)
+  "Retirer la question 'un processus existe...' à l'exécution de reload-ipython"
+  (flet ((yes-or-no-p (&rest args) t)
+         (y-or-n-p (&rest args) t))
+    ad-do-it))
 
 (defun windnew-ipython ()
   "Exécute le buffer courrant dans un terminal ipython"
@@ -212,7 +261,6 @@ emacs."
     (select-window window))
   (execute-ipython my-text)))
 
-
 ;; ---- Company-mode ----
 
 (defun indent-or-complete ()
@@ -244,3 +292,4 @@ emacs."
   (save-buffer)
   (let ((file (file-name-nondirectory buffer-file-name)))
 	    (compile (concat "g++ " file " -o "  (file-name-sans-extension file)))))
+
