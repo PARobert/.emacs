@@ -47,7 +47,7 @@
       '(
 	("\\.el$" . emacs-lisp-mode)
         ("\\.emacs$" . emacs-lisp-mode)
-        ("\\.tex$" . tex-mode)
+        ("\\.tex$" . LaTeX-mode)
         ("\\.bib$" . bibtex-mode)
         ("\\.py$" . python-mode)
         ("\\.R$" . R-mode)
@@ -58,7 +58,7 @@
 ;(setq interpreter-mode-alist '("python" . python-mode))
 
 (add-hook 'emacs-lisp-mode-hook 'font-lock-mode)
-(add-hook 'tex-mode-hook 'font-lock-mode)
+(add-hook 'LaTeX-mode-hook 'font-lock-mode)
 (add-hook 'bibtex-mode-hook 'font-lock-mode)
 (add-hook 'R-mode-hook 'font-lock-mode)
 
@@ -192,6 +192,7 @@
 (add-hook 'text-mode-hook
           (lambda ()
             'flyspell-mode
+            'LaTeX-math-mode
             'turn-on-auto-fill
             'fill-start))
 
