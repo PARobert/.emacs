@@ -106,7 +106,7 @@
  company-show-numbers t
  company-minimum-prefix-length 2)
 
-;; (company-quickhelp-mode 1)
+(company-quickhelp-mode 1)
 
 
 ;; ---- Ispell ----

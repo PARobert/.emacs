@@ -50,6 +50,7 @@
 ;; ---- Company ----
 
 (global-set-key (kbd "\t") 'company-complete-common)
+;; (global-set-key (kbd "C-c h") 'company-quick-description)
 
 ;; ---- C-mode ----
 

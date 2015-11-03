@@ -43,6 +43,19 @@ emacs."
     (save-buffer)
     (byte-compile-file buffer-file-name)))
 
+;; (defun unindent-ligne-ou-region (&optional start end)
+;;   "Désindentation de la ligne ou de la région courrante"
+;;   (interactive)
+;;   (if (not (use-region-p))
+;;       (indent-to-left-margin)
+;;     (save-restriction
+;;       (let ((start (region-beginning))
+;;             (end (region-end)))
+;;         (goto-char start)
+;;         (while (<= (point) (end))
+;;           (line-move)
+;;           (indent-to-left-margin))))))
+
 ;; ---- spliter la fenêtre ----
 
 (defun split-droite ()
@@ -263,11 +276,27 @@ emacs."
 
 ;; ---- Company-mode ----
 
+(defun exist-company-help-p ()
+  "Renvoie t si le buffer *Help* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*Help*")))
+
 (defun indent-or-complete ()
   (interactive)
   (if (looking-at "\\_>")
       (company-complete-common)
     (indent-according-to-mode)))
+
+;; (defun company-quick-description ()
+;;   "Ouvre la description des fonctions dans une nouvelle fenêtre"
+;;   (interactive)
+;;   (if (exist-company-help-p)
+;;       (describe-function (function-called-at-point))
+;;     (save-excursion
+;;       (split-auto)
+;;       (switch-to-buffer "*Help*"))
+;;       (help-mode))
+;;     (describe-function (function-called-at-point))))
 
 ;; ---- Fill-mode ----
 
