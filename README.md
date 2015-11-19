@@ -8,5 +8,5 @@ This is my emacs configuration files.
 
 Fetch the configuration files from GitHub repository :
 
-`git clone git@github.com:PARobert/.emacs.git --recursive`
+`git clone http://github.com/PARobert/.emacs.git --recursive ./.emacs.d`
 
