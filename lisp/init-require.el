@@ -12,14 +12,20 @@
 (require 'company)
 (require 'company-auctex)
 (require 'company-math)
+(require 'pos-tip)
+(require 'company-quickhelp)
+(require 'company-statistics)
 
 ;; ---- Python-mode ----
 (require 'python-mode)
-;(require 'ipython)
 
 ;; ---- LaTeX-mode ----
-(require 'tex)
+;; (require 'tex)
 (require 'latex)
+(require 'font-latex)
 
 ;; ---- C-mode ----
 (require 'cc-mode)
+
+;; ---- ESS ----
+(require 'ess)

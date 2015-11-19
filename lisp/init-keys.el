@@ -35,7 +35,6 @@
 (global-set-key (kbd "C-c g") 'magit-status)
 (global-set-key (kbd "C-c C-t") 'windnew-terminal)
 
-
 ;; ---- Python-mode ----
 
 (defun mon-python-mode-map ()
@@ -50,7 +49,7 @@
 ;; ---- Company ----
 
 (global-set-key (kbd "\t") 'company-complete-common)
-;; (global-set-key (kbd "C-c h") 'company-quick-description)
+(global-set-key (kbd "C-c h") 'company-quick-description)
 
 ;; ---- C-mode ----
 
@@ -59,3 +58,15 @@
   (local-set-key (kbd "C-c C-c") 'mon-c-compilation)
   (local-set-key (kbd "<return>") 'newline-and-indent))
 (add-hook 'c++-mode-hook 'mon-c++-mode-map)
+
+;; ---- R-mode ----
+
+(defun mon-R-mode-map ()
+  "Définition des raccourcis clavier du R-mode"
+  (local-set-key (kbd "<C-return>") 'mon-R-eval))
+(add-hook 'R-mode-hook 'mon-R-mode-map)
+
+;; ---- Terminal ----
+
+(add-hook 'term-mode-hook (lambda ()
+                            (define-key term-raw-map (kbd "C-y") 'term-paste)))

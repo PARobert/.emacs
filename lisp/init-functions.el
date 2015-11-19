@@ -56,6 +56,24 @@ emacs."
 ;;           (line-move)
 ;;           (indent-to-left-margin))))))
 
+(defun copie-ligne-ou-region ()
+  "Copie la ligne ou la région actuelle"
+  (interactive)
+  (if (use-region-p)
+      (setq my-text (buffer-substring (region-beginning) (region-end)))
+    (setq my-text (thing-at-point 'line))))
+
+(defun my/eval-buffer ()
+  "Execute the current buffer as Lisp code.
+Top-level forms are evaluated with `eval-defun' so that `defvar'
+and `defcustom' forms reset their default values."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (forward-sexp)
+      (eval-defun nil))))
+
 ;; ---- spliter la fenêtre ----
 
 (defun split-droite ()
@@ -249,13 +267,6 @@ emacs."
     (split-auto)
     (load-ipython (buffer-file-name))))
 
-(defun copie-ligne-ou-region ()
-  "Copie la ligne ou la région actuelle"
-  (interactive)
-  (if (use-region-p)
-      (setq my-text (buffer-substring (region-beginning) (region-end)))
-    (setq my-text (thing-at-point 'line))))
-
 (defun execute-ipython (code)
   "Exécute du code copié dans un terminal ipython"
   (term-mode)
@@ -274,6 +285,27 @@ emacs."
     (select-window window))
   (execute-ipython my-text)))
 
+;; (defun interprete-ipython ()
+;;   "Interprète une partie de code"
+;;   (interactive)
+;;   (setq-local my-initial-buffer (buffer-file-name))
+;;   (copie-ligne-ou-region)
+;;   (if (not 'exist-ipython-p)
+;;       (load-ipython "")
+;;     (setq window (get-buffer-window "*ipython*"))
+;;     (select-window window))
+;;   (execute-ipython my-text)
+;;   (switch-to-buffer my-initial-buffer))
+
+;; ---- R ----
+
+(defun mon-R-eval ()
+  "Evaluer du code R, que ce soit la ligne ou la région"
+  (interactive)
+  (if (use-region-p)
+      (call-interactively 'ess-eval-region)
+    (call-interactively 'ess-eval-line-and-step)))
+  
 ;; ---- Company-mode ----
 
 (defun exist-company-help-p ()
@@ -287,16 +319,16 @@ emacs."
       (company-complete-common)
     (indent-according-to-mode)))
 
-;; (defun company-quick-description ()
-;;   "Ouvre la description des fonctions dans une nouvelle fenêtre"
-;;   (interactive)
-;;   (if (exist-company-help-p)
-;;       (describe-function (function-called-at-point))
-;;     (save-excursion
-;;       (split-auto)
-;;       (switch-to-buffer "*Help*"))
-;;       (help-mode))
-;;     (describe-function (function-called-at-point))))
+(defun company-quick-description ()
+  "Ouvre la description des fonctions dans une nouvelle fenêtre"
+  (interactive)
+  (if (exist-company-help-p)
+      (describe-function (function-called-at-point))
+    (save-excursion
+      (split-auto)
+      (switch-to-buffer "*Help*"))
+      (help-mode))
+    (describe-function (function-called-at-point)))
 
 ;; ---- Fill-mode ----
 

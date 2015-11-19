@@ -3,6 +3,14 @@
              "~/.emacs.d/color-theme"
              "~/.emacs.d/color-theme/themes")
 
+;; Desactiver la sourris.
+(dolist (k '([mouse-1] [down-mouse-1] [drag-mouse-1] [double-mouse-1] [triple-mouse-1]  
+             [mouse-2] [down-mouse-2] [drag-mouse-2] [double-mouse-2] [triple-mouse-2]
+             [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
+             [mouse-4] [down-mouse-4] [drag-mouse-4] [double-mouse-4] [triple-mouse-4]
+             [mouse-5] [down-mouse-5] [drag-mouse-5] [double-mouse-5] [triple-mouse-5]))
+  (global-unset-key k))
+
 ;; Enlever l'affichage de l'écran d'acceuil au démarrage d'emacs.
 (setq inhibit-startup-screen 1)
 
@@ -55,7 +63,7 @@
 (setq fill-nobreak-predicate '(fill-french-nobreak-p))
 (setq sentence-end-double-space nil)
 
-;; Colors
+;; Définition des couleurs
 (defvar my-bg "Grey24")
 (defvar my-fg "SkyBlue1")
 (defvar my-err "Grey26")
@@ -63,7 +71,12 @@
 (defvar my-fond "Grey16")
 (defvar my-bg-comp "Grey22")
 
-;; Emacs base faces
+(defvar my-lf "IndianRed")
+(defvar my-lp "LightSkyBlue1")
+(defvar my-lw "White")
+
+;; ---- Fonts par défault ----
+
 (set-face-background 'isearch my-fg)
 (set-face-background 'isearch-fail "SteelBlue3")
 (set-face-background 'lazy-highlight "SkyBlue3")
@@ -118,3 +131,23 @@
 (set-face-background 'company-scrollbar-fg "White")
 (set-face-background 'company-scrollbar-bg my-bg)
 
+;; ---- LaTeX-mode ----
+
+(set-face-attribute 'font-latex-sectioning-0-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+(set-face-attribute 'font-latex-sectioning-1-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+(set-face-attribute 'font-latex-sectioning-2-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+(set-face-attribute 'font-latex-sectioning-3-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+(set-face-attribute 'font-latex-sectioning-4-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+(set-face-attribute 'font-latex-sectioning-5-face nil :foreground my-lf :height 98 :bold t :inherit nil)
+
+(set-face-attribute 'font-latex-bold-face nil :foreground my-lp :bold t :italic nil :inherit nil)
+(set-face-attribute 'font-latex-warning-face nil :foreground my-lp :bold t :italic nil :inherit nil)
+(set-face-attribute 'font-latex-italic-face nil :foreground my-lp :bold t :italic nil :inherit nil)
+(set-face-attribute 'font-latex-string-face nil :foreground my-lw :bold nil :italic nil :inherit nil)
+(set-face-attribute 'font-latex-verbatim-face nil :foreground my-lw :bold nil :italic nil :inherit nil)
+(set-face-attribute 'font-latex-doctex-preprocessor-face nil :foreground my-lw :bold nil :italic nil :inherit nil)
+(set-face-attribute 'font-latex-doctex-documentation-face nil :foreground my-lw :bold nil :italic nil :inherit nil)
+(set-face-attribute 'font-latex-subscript-face nil :foreground my-lw :bold nil :italic nil :height 98 :inherit nil)
+(set-face-attribute 'font-latex-superscript-face nil :foreground my-lw :bold nil :italic nil :height 98 :inherit nil)
+
+(setq font-latex-script-display (quote ((raise 0) raise 0)))

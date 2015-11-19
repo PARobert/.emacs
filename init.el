@@ -15,8 +15,11 @@
 (let ((default-directory  "~/.tmp/emacs"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
-(add-to-list 'load-path "~/.emacs.d/lisp")
-(setq exec-path (append exec-path '("~/.emacs.d/bin")))
+(let ((default-directory  "~/.emacs.d/lisp"))
+  (normal-top-level-add-to-load-path '("."))
+  (normal-top-level-add-subdirs-to-load-path))
+;; (add-to-list 'load-path "~/.emacs.d/lisp")
+
 
 ;; Chargement de mes fichiers de config
 (load "init-require")
@@ -51,11 +54,12 @@
         ("\\.bib$" . bibtex-mode)
         ("\\.py$" . python-mode)
         ("\\.R$" . R-mode)
+        ("\\.r$" . R-mode)
         ("\\.c$" . c++-mode)
         ("\\.h$" . c++-mode)
-        ("\\.cpp" . c++-mode)))
-
-;(setq interpreter-mode-alist '("python" . python-mode))
+        ("\\.cpp" . c++-mode)
+        ("\\.lua" . lua-mode)
+        ("\\.md" . markdown-mode)))
 
 (add-hook 'emacs-lisp-mode-hook 'font-lock-mode)
 (add-hook 'LaTeX-mode-hook 'font-lock-mode)
@@ -75,46 +79,30 @@
              `(".*" . ,backup-dir))
 (suppression-automatique-demarrage)
 
-;; Sauvegarde entre sessions de l'historique des commandes et des fichiers 
-;; ouverts
-;(setq savehist-file "~/.emacs.d/.tmp/savehist")
-;(savehist-mode 1)
-
 ;; Ecrire y ou n à la place de yes ou no
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Iteractively do things
 (ido-mode t)
 
-
-;; (yas-global-mode yasnipett
-;; (yas-global-mode 1)
-;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-;; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
-
-
 ;; ---- Company-mode ----
 
 (add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook (lambda () (company-quickhelp-mode t)))
 (add-to-list 'company-backends 'company-math-symbols-unicode 'company-c-headers)
 
 (setq
  company-tooltip-limit 20
- company-idle-delay 0.5
+ company-idle-delay 0.2
  company-echo-delay 0
  company-show-numbers t
  company-minimum-prefix-length 2)
-
-(company-quickhelp-mode 1)
-
 
 ;; ---- Ispell ----
 
 (setq
  ispell-program-name "aspell"
  ispell-dictionary "francais")
-
 
 ;; ---- Python-mode ----
 
@@ -151,8 +139,7 @@
 
 (setq-default
  py-shell-name "ipython"
- py-chich-bufname "IPython")
- 
+ py-chich-bufname "IPython") 
 
 ;; ---- Emacs-lisp-mode ----
 
@@ -163,9 +150,14 @@
 
 ;; ---- ESS-mode ----
 
+(autoload 'R-mode "ess-site.el" "" t)
+(add-hook 'ess-mode-hook (lambda () (company-statistics-mode t)))
 
-
-
+(setq ess-ask-for-ess-directory nil)
+(setq comint-input-ring-size 1000)
+(setq ess-indent-level 4)
+(setq ess-arg-function-offset 4)
+(setq ess-else-offset 4)
 
 ;; ---- AucTex ----
 
@@ -186,16 +178,17 @@
  Tex-parse-self t
  Tex-save-query nil)
 
+;; (setq TeX-electric-escape t)
+(company-auctex-init)
 
 ;; ---- Text-mode ----
 
-(add-hook 'text-mode-hook
-          (lambda ()
-            'flyspell-mode
-            'LaTeX-math-mode
-            'turn-on-auto-fill
-            'fill-start))
-
+(load "init-latex")
+;; (add-hook 'text-mode-hook
+;;           (lambda ()
+;;             'flyspell-mode
+;;             'turn-on-auto-fill
+;;             'fill-start))
 
 ;; ---- C-mode ----
 
@@ -208,3 +201,7 @@
 
 (setq eshell-history-file-name "~/.tmp/emacs/eshell/history"
       eshell-last-dir-ring-file-name "~/.tmp/emacs/eshell/lastdir") 
+
+;; ---- Scilab ----
+
+(load "scilab-startup")
