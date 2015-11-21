@@ -69,6 +69,8 @@
 (setq make-backup-files t
       backup-by-copying t
       backup-dir "~/.tmp/emacs/backup/"
+      auto-save-file-name-transforms `((".*" ,"~/.tmp/emacs/backup/" t))
+      tramp-auto-save-directory "~/.tmp/emacs/backup/"
       delete-old-versions t)
 (add-to-list 'backup-directory-alist
              `(".*" . ,backup-dir))
