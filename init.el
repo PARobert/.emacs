@@ -18,7 +18,6 @@
 (let ((default-directory  "~/.emacs.d/lisp"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
-;; (add-to-list 'load-path "~/.emacs.d/lisp")
 
 
 ;; Chargement de mes fichiers de config
@@ -48,18 +47,14 @@
 ;; Choix du mode selon l'extension du fichier
 (setq auto-mode-alist
       '(
-	("\\.el$" . emacs-lisp-mode)
-        ("\\.emacs$" . emacs-lisp-mode)
+	("\\.\\(el\\|emacs\\)$" . emacs-lisp-mode)
         ("\\.tex$" . LaTeX-mode)
         ("\\.bib$" . bibtex-mode)
         ("\\.py$" . python-mode)
-        ("\\.R$" . R-mode)
-        ("\\.r$" . R-mode)
-        ("\\.c$" . c++-mode)
-        ("\\.h$" . c++-mode)
-        ("\\.cpp" . c++-mode)
+        ("\\.\\(r\\|R\\)$" . R-mode)
+        ("\\.\\(c\\|h\\|cpp\\)$" . c++-mode)
         ("\\.lua" . lua-mode)
-        ("\\.md" . markdown-mode)))
+        ("\\.\\(md\\|markdown\\)" . markdown-mode)))
 
 (add-hook 'emacs-lisp-mode-hook 'font-lock-mode)
 (add-hook 'LaTeX-mode-hook 'font-lock-mode)
@@ -112,34 +107,6 @@
    'font-lock-mode
    (add-to-list 'company-backends 'company-jedi)
    '(fci-mode t)))
-
-(setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args ""
- python-shell-prompt-regexp "In \\[[0-9]+\\]: "
- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
- "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
- py-electric-delete-active t)
-
-(setq
- py-load-pymacs-p nil
- py-python-command "/usr/bin/python3.4"
- py-shell-swith-buffers-on-execute-p t
- py-switch-buffers-on-execute-p t
- py-split-windows-on-execute-p t
- py-smart-indentation t)
-(setq py-python-command-args '("--gui=Qt" "--pylab=Qt" "-colors" "Linux"))
-
-;;(setq py-python-command-args '("--gui=wx" "--pylab=wx" "-colors" "Linux"))
-
-(setq-default
- py-shell-name "ipython"
- py-chich-bufname "IPython") 
 
 ;; ---- Emacs-lisp-mode ----
 
