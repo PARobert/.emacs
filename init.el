@@ -93,7 +93,8 @@
  company-idle-delay 0.2
  company-echo-delay 0
  company-show-numbers t
- company-minimum-prefix-length 2)
+ company-minimum-prefix-length 2
+ company-statistics-file "~/.tmp/emacs/company/company-statistics-cache.el")
 
 ;; ---- Ispell ----
 
