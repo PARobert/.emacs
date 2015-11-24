@@ -132,6 +132,7 @@
 ;; ---- AucTex ----
 
 (load "auctex.el" nil t t)
+(load "font-latex")
 
 (add-hook
  'LaTeX-mode-hook
@@ -143,6 +144,7 @@
    'fill-start
    'my-latex-mode-setup))
 
+(tex-font-setup)
 (setq
  Tex-auto-save t
  Tex-parse-self t
