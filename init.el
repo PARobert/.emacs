@@ -111,11 +111,14 @@
    (add-to-list 'company-backends 'company-jedi)
    '(fci-mode t)))
 
-;; ---- Emacs-lisp-mode ----
 
 
+;; ---- Lua ----
 
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
+(setq lua-indent-level 4)
 
 
 ;; ---- ESS-mode ----
@@ -155,12 +158,12 @@
 
 ;; ---- Text-mode ----
 
-(load "init-latex")
-;; (add-hook 'text-mode-hook
-;;           (lambda ()
-;;             'flyspell-mode
-;;             'turn-on-auto-fill
-;;             'fill-start))
+;; (load "init-latex")
+(add-hook 'text-mode-hook
+          (lambda ()
+            'flyspell-mode
+            'turn-on-auto-fill
+            'fill-start))
 
 ;; ---- C-mode ----
 
