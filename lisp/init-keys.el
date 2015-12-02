@@ -43,8 +43,16 @@
   (local-set-key (kbd "<C-return>") 'interprete-ipython)
   (local-set-key (kbd "<C-M-return>") 'windnew-ipython)
   (local-set-key (kbd "\C-m") 'newline-and-indent)
-  (local-set-key (kbd "<C-tab>") 'nil))
+  (local-set-key (kbd "<C-tab>") 'py-indent-line))
 (add-hook 'python-mode-hook 'mon-python-mode-map)
+
+;; ---- Lua-mode ----
+
+(defun mon-lua-mode-map ()
+  "Définition des raccourcis clavier du lua-mode"
+  (local-set-key (kbd "<C-return>") 'lua-send-line-or-region)
+  (local-set-key (kbd "<C-M-return>") 'lua-send-buffer))
+(add-hook 'lua-mode-hook 'mon-lua-mode-map)
 
 ;; ---- Company ----
 

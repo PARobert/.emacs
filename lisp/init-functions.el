@@ -43,19 +43,6 @@ emacs."
     (save-buffer)
     (byte-compile-file buffer-file-name)))
 
-;; (defun unindent-ligne-ou-region (&optional start end)
-;;   "Désindentation de la ligne ou de la région courrante"
-;;   (interactive)
-;;   (if (not (use-region-p))
-;;       (indent-to-left-margin)
-;;     (save-restriction
-;;       (let ((start (region-beginning))
-;;             (end (region-end)))
-;;         (goto-char start)
-;;         (while (<= (point) (end))
-;;           (line-move)
-;;           (indent-to-left-margin))))))
-
 (defun copie-ligne-ou-region ()
   "Copie la ligne ou la région actuelle"
   (interactive)
@@ -237,7 +224,7 @@ and `defcustom' forms reset their default values."
   (term-mode)
   (term-char-mode)
   (switch-to-buffer "*ipython*")
-  (setq-local origin filename))
+  (setq-local origin-python filename))
 
 (defun reload-ipython (&optional filename)
   "Relancer le terminal ipython"
@@ -248,7 +235,7 @@ and `defcustom' forms reset their default values."
     (split-auto)
     (set-buffer "*ipython*"))
   (if (not filename)
-      (setq filename origin))
+      (setq filename origin-python))
   (kill-buffer)
   (load-ipython filename))
 
@@ -262,17 +249,15 @@ and `defcustom' forms reset their default values."
   "Exécute le buffer courrant dans un terminal ipython"
   (interactive)
   (save-buffer)
+  (save-window-excursion
   (if (exist-ipython-p)
       (reload-ipython (buffer-file-name))
     (split-auto)
-    (load-ipython (buffer-file-name))))
+    (load-ipython (buffer-file-name)))))
 
-(defun execute-ipython (code)
+(defun execute-ipython (proc code)
   "Exécute du code copié dans un terminal ipython"
-  (term-mode)
-  (term-line-mode)
-  (insert code)
-  (term-char-mode))
+  (term-send-string proc code))
 
 (defun interprete-ipython ()
   "Interprète une partie de code"
@@ -281,21 +266,9 @@ and `defcustom' forms reset their default values."
   (copie-ligne-ou-region)
   (if (not 'exist-ipython-p)
       (load-ipython "")
-    (setq window (get-buffer-window "*ipython*"))
-    (select-window window))
-  (execute-ipython my-text)))
-
-;; (defun interprete-ipython ()
-;;   "Interprète une partie de code"
-;;   (interactive)
-;;   (setq-local my-initial-buffer (buffer-file-name))
-;;   (copie-ligne-ou-region)
-;;   (if (not 'exist-ipython-p)
-;;       (load-ipython "")
-;;     (setq window (get-buffer-window "*ipython*"))
-;;     (select-window window))
-;;   (execute-ipython my-text)
-;;   (switch-to-buffer my-initial-buffer))
+    (setq window (get-buffer-window "*ipython*")))
+  (execute-ipython "*ipython*" my-text))
+  (next-line))
 
 ;; ---- R ----
 
@@ -354,3 +327,11 @@ and `defcustom' forms reset their default values."
   (let ((file (file-name-nondirectory buffer-file-name)))
 	    (compile (concat "g++ " file " -o "  (file-name-sans-extension file)))))
 
+;; ---- Lua ----
+
+(defun lua-send-line-or-region ()
+  "Interprète une partie de code, que ce soit une ligne ou une région"
+  (interactive)
+  (if (use-region-p)
+      (lua-send-region (region-beginning) (region-end))
+    (lua-send-current-line)))
