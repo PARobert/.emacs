@@ -60,6 +60,7 @@
 (add-hook 'LaTeX-mode-hook 'font-lock-mode)
 (add-hook 'bibtex-mode-hook 'font-lock-mode)
 (add-hook 'R-mode-hook 'font-lock-mode)
+(add-hook 'python-mode 'font-lock-mode)
 
 ;; Empêcher les informations inutiles en quitant emacs
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
@@ -107,11 +108,34 @@
 (add-hook
  'python-mode-hook
  (lambda ()
-   'font-lock-mode
    (add-to-list 'company-backends 'company-jedi)
    '(fci-mode t)))
 
+;; Complétion par Company
+(set (make-local-variable 'py-electric-close-active-p) t)
+(set (make-local-variable 'py-auto-complete-p) nil)
+(set (make-local-variable 'py-auto-completion-mode-p) nil)
+(set (make-local-variable 'py-company-pycomplete-p) t)
+(set (make-local-variable 'py-complete-auto) 'py-complete)
+(set (make-local-variable 'py-complete-function) 'nil)
+;; (py-timer-close-completions-p )
+;; (py-complete-ac-sources )
+;; (py-shell-module-completion-code "")
+;; (py-ipython-module-completion-string "")
 
+;; Retour à la ligne automatque
+(set (make-local-variable 'py-auto-fill-mode) t)
+(set (make-local-variable 'py-comment-fill-column) 80)
+(set (make-local-variable 'py-docstring-fill-column) 80)
+
+;; Mise en forme du code python dans un interpréteur shell
+(set (make-local-variable 'py-fontify-shell-buffer-p) t)
+
+;; Auto-enregistrement avant interprétation
+(set (make-local-variable 'py-ask-about-save) nil)
+
+;; Mise en forme du docstring
+(set (make-local-variable 'py-docstring-style) 'django)
 
 ;; ---- Lua ----
 
@@ -123,7 +147,8 @@
 
 ;; ---- ESS-mode ----
 
-(autoload 'R-mode "ess-site.el" "" t)
+;; (add-hook 'ess-mode-hook '(autoload 'R-mode "ess-site.el" "" t))
+(autoload 'R-mode "ess-site.el" "ESS" t)
 (add-hook 'ess-mode-hook (lambda () (company-statistics-mode t)))
 
 (setq ess-ask-for-ess-directory nil)
@@ -180,3 +205,7 @@
 ;; ---- Scilab ----
 
 (load "scilab-startup")
+
+
+;; ---- END ----
+(kill-buffer "*Compile-Log*")
