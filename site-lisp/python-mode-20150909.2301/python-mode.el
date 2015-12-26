@@ -25265,16 +25265,20 @@ See available customizations listed in files variables-python-mode at directory 
     (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'local))
   (when py-pdbtrack-do-tracking-p
     (add-hook 'comint-output-filter-functions 'py--pdbtrack-track-stack-file t))
-  (cond
-   (py-complete-function
-    (add-hook 'completion-at-point-functions
-              py-complete-function nil 'local))
-   (py-load-pymacs-p
-    (add-hook 'completion-at-point-functions
-              'py-complete-completion-at-point nil 'local))
-   (t
-    (add-hook 'completion-at-point-functions
-              'py-shell-complete nil 'local)))
+
+
+  ;; (cond
+  ;;  (py-complete-function 
+  ;;   (add-hook 'completion-at-point-functions
+  ;;             py-complete-function nil 'local))
+  ;;  (py-load-pymacs-p
+  ;;   (add-hook 'completion-at-point-functions
+  ;;             'py-complete-completion-at-point nil 'local))
+  ;;  (t
+  ;;   (add-hook 'completion-at-point-functions
+  ;;             'py-shell-complete nil 'local)))
+
+  
   ;; (if py-auto-complete-p
   ;; (add-hook 'python-mode-hook 'py--run-completion-timer)
   ;; (remove-hook 'python-mode-hook 'py--run-completion-timer))
