@@ -445,15 +445,19 @@ Otherwise try a list of fixed known viewers.
       (store-match-data (match-data))
       (nreverse list))))
 
+;; (defun ess-write-to-dribble-buffer (text)
+;;   "Write TEXT to dribble ('*ESS*') buffer."
+;;   (unless (buffer-live-p ess-dribble-buffer)
+;;     ;; ESS dribble buffer must be re-created.
+;;     (setq ess-dribble-buffer (get-buffer-create "*Messages*")))
+;;   (let (deactivate-mark)
+;;     (with-current-buffer ess-dribble-buffer
+;;       (goto-char (point-max))
+;;       (insert-before-markers text))))
+
 (defun ess-write-to-dribble-buffer (text)
   "Write TEXT to dribble ('*ESS*') buffer."
-  (unless (buffer-live-p ess-dribble-buffer)
-    ;; ESS dribble buffer must be re-created.
-    (setq ess-dribble-buffer (get-buffer-create "*ESS*")))
-  (let (deactivate-mark)
-    (with-current-buffer ess-dribble-buffer
-      (goto-char (point-max))
-      (insert-before-markers text))))
+  (message "%s" text))
 
 ;; Shortcut to render "dribbling" statements less cluttering:
 (defun ess-if-verbose-write (text)
