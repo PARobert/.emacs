@@ -28,6 +28,7 @@
 (setq TeX-electric-sub-and-superscript t) 
 
 (defvar my-text)
+(defvar latex-title-prefix-string "% ")
 
 ;; --------------------------------------------------------------------------------
 ;;     Local theme
@@ -279,12 +280,32 @@
          master-file)
     (minibuffer-message "latexmk done")))
 
+(defun my-latex-title-dash-line ()
+  "Insert dashed line"
+  (insert latex-title-prefix-string)
+  (insert-char ?- fill-column)
+  (insert "\n"))
+
+(defun my-latex-title (title)
+  (interactive "sEnter the title : ")
+  (my-latex-title-dash-line)
+  (insert latex-title-prefix-string)
+  (insert "    " title "\n")
+  (my-latex-title-dash-line))
+
+(defun my-latex-line ()
+  "Insert dashed line"
+  (interactive)
+  (my-latex-title-dash-line)
+  (insert "\n"))
+
 ;; --------------------------------------------------------------------------------
 ;;     Mode-map
 ;; --------------------------------------------------------------------------------
 
 (defun my-latex-mode-map ()
   "Short-cuts for LaTeX-mode : to be finished"
+  (local-unset-key (kbd "C-s-l"))
   (local-set-key (kbd "C-s-i") 'latex-insert-it)
   (local-set-key (kbd "C-s-b") 'latex-insert-bf)
   (local-set-key (kbd "C-s-(") 'latex-insert-left-par)
@@ -300,7 +321,9 @@
   (local-set-key (kbd "C-s-e C-s-f") 'latex-insert-figure)
   (local-set-key (kbd "C-s-e C-s-t") 'latex-insert-table)
   (local-set-key (kbd "C-s-e C-s-n") 'latex-insert-new)
-  (local-set-key (kbd "C-c C-c") #'run-latexmk))
+  (local-set-key (kbd "C-c C-c") #'run-latexmk)
+  (local-set-key (kbd "C-s-t") 'my-latex-title)
+  (local-set-key (kbd "C-s-l") 'my-latex-line))
 
 (add-hook 'LaTeX-mode-hook 'my-latex-mode-map)
 
