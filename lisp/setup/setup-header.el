@@ -56,3 +56,6 @@
                          my/header-blank))
 
 (add-hook 'emacs-lisp-mode-hook #'auto-make-header)
+
+
+(provide 'setup-header)
