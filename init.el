@@ -5,8 +5,6 @@
 ;; Description : init file for emacs.
 ;; --------------------------------------------------------------------------------
 
-;; Pierre-Antoine ROBERT <pierreantoine dot robert at gmail dot com>
-
 (setq user-full-name "Pierre-Antoine ROBERT"
       user-mail-adress "pierre.antoine.ROBERT@ensae-paristech.fr"
       query-user-mail-adress nil)
