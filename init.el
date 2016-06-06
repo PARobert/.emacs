@@ -1,10 +1,17 @@
+;; --------------------------------------------------------------------------------
+;; Filename : init.el
+;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
+;; 
+;; Description : init file for emacs.
+;; --------------------------------------------------------------------------------
+
 ;; Pierre-Antoine ROBERT <pierreantoine dot robert at gmail dot com>
 
 (setq user-full-name "Pierre-Antoine ROBERT"
-      user-mail-adress "pierreantoine.robert@gmail.com"
+      user-mail-adress "pierre.antoine.ROBERT@ensae-paristech.fr"
       query-user-mail-adress nil)
 
-;; Mettre en plein écran
+;; Put in full screen
 (custom-set-variables
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
@@ -19,21 +26,21 @@
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-
 ;; Chargement de mes fichiers de config
-(load "init-require")
-(load "init-theme")
-(load "init-functions")
-(load "init-keys")
+(require 'setup-packages)
+(require 'setup-require)
+(require 'setup-theme)
+(require 'setup-functions)
+(require 'setup-keys)
 
-;; Packages
-(eval-after-load "package"
-  '(progn
-     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-     (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)     
-     (package-initialize)))
-(setq package-user-dir "~/.emacs.d/site-lisp")
+(require 'setup-company)
+(require 'setup-header)
+
+(require 'init-emacs-mode)
+(require 'init-latex-mode)
+(require 'init-ess-mode)
+(require 'init-python-mode)
+(require 'init-c-mode)
 
 ;; Empêche l'outil de personnalisation d'emacs de toucher à ce fichier
 (setq custom-file "~/.tmp/emacs/custom/emacs-custom.el")
@@ -48,13 +55,17 @@
 (setq auto-mode-alist
       '(
 	("\\.\\(el\\|emacs\\)$" . emacs-lisp-mode)
-        ("\\.tex$" . LaTeX-mode)
+        ("\\.\\(tex\\|lytex\\)$" . LaTeX-mode)
         ("\\.bib$" . bibtex-mode)
         ("\\.py$" . python-mode)
         ("\\.\\(r\\|R\\)$" . R-mode)
         ("\\.\\(c\\|h\\|cpp\\)$" . c++-mode)
-        ("\\.lua" . lua-mode)
-        ("\\.\\(md\\|markdown\\)" . markdown-mode)))
+        ("\\.lua$" . lua-mode)
+        ("\\.sh$" . sh-mode)
+        ("\\.m$" . octave-mode)
+        ("\\.ly$" . LilyPond-mode)
+        ("\\.\\(md\\|markdown\\)$" . markdown-mode)
+        ("\\.\\(m\\|mod\\)$" . matlab-mode)))
 
 (add-hook 'emacs-lisp-mode-hook 'font-lock-mode)
 (add-hook 'LaTeX-mode-hook 'font-lock-mode)
@@ -62,80 +73,54 @@
 (add-hook 'R-mode-hook 'font-lock-mode)
 (add-hook 'python-mode 'font-lock-mode)
 
-;; Empêcher les informations inutiles en quitant emacs
+;; disable useless question while quiting emacs
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   (flet ((process-list ())) ad-do-it))
 
 ;; Stocker les fichiers~ dans un dossier et les supprimer régulièrement
-(setq make-backup-files t
-      backup-by-copying t
-      backup-dir "~/.tmp/emacs/backup/"
-      auto-save-file-name-transforms `((".*" ,"~/.tmp/emacs/backup/" t))
-      tramp-auto-save-directory "~/.tmp/emacs/backup/"
-      delete-old-versions t)
-(add-to-list 'backup-directory-alist
-             `(".*" . ,backup-dir))
+(setq make-backup-files t)
+(setq backup-by-copying t)
+(setq backup-dir "~/.tmp/emacs/backup/")
+(setq auto-save-file-name-transforms `((".*" ,"~/.tmp/emacs/backup/" t)))
+(setq tramp-auto-save-directory "~/.tmp/emacs/backup/")
+(setq delete-old-versions t)
+(add-to-list 'backup-directory-alist `(".*" . ,backup-dir))
 (suppression-automatique-demarrage)
 
-;; Ecrire y ou n à la place de yes ou no
-(fset 'yes-or-no-p 'y-or-n-p)
 
-;; Iteractively do things
-(ido-mode t)
-
-;; ---- Company-mode ----
-
-(add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'after-init-hook (lambda () (company-quickhelp-mode t)))
-(add-to-list 'company-backends 'company-math-symbols-unicode 'company-c-headers)
-
-(setq
- company-tooltip-limit 20
- company-idle-delay 0.2
- company-echo-delay 0
- company-show-numbers t
- company-minimum-prefix-length 2
- company-statistics-file "~/.tmp/emacs/company/company-statistics-cache.el")
+(setq abbrev-file-name  "~/.tm/abbrev/abbrev_defs") ; Abbreviations file
+(fset 'yes-or-no-p 'y-or-n-p)                       ; simple questions
+(ido-mode t)                                        ; Iteractively do things
+(prefer-coding-system 'utf-8)                       ; Enable utf-8 by default
+(setq ido-file-extensions-order '(".tex" ".el" ".py" ".R"))    ; order files in the mini-buffer
 
 ;; ---- Ispell ----
 
-(setq
- ispell-program-name "aspell"
- ispell-dictionary "francais")
+(setq ispell-program-name "aspell")
+(setq ispell-dictionary "francais")
+(setq ispell-list-command "--list")
+(setq flyspell-issue-message-flag nil)
 
-;; ---- Python-mode ----
 
-(add-hook
- 'python-mode-hook
- (lambda ()
-   (add-to-list 'company-backends 'company-jedi)
-   '(fci-mode t)))
 
-;; Complétion par Company
-(set (make-local-variable 'py-electric-close-active-p) t)
-(set (make-local-variable 'py-auto-complete-p) nil)
-(set (make-local-variable 'py-auto-completion-mode-p) nil)
-(set (make-local-variable 'py-company-pycomplete-p) t)
-(set (make-local-variable 'py-complete-auto) 'py-complete)
-(set (make-local-variable 'py-complete-function) 'nil)
-;; (py-timer-close-completions-p )
-;; (py-complete-ac-sources )
-;; (py-shell-module-completion-code "")
-;; (py-ipython-module-completion-string "")
 
-;; Retour à la ligne automatque
-(set (make-local-variable 'py-auto-fill-mode) t)
-(set (make-local-variable 'py-comment-fill-column) 80)
-(set (make-local-variable 'py-docstring-fill-column) 80)
 
-;; Mise en forme du code python dans un interpréteur shell
-(set (make-local-variable 'py-fontify-shell-buffer-p) t)
 
-;; Auto-enregistrement avant interprétation
-(set (make-local-variable 'py-ask-about-save) nil)
 
-;; Mise en forme du docstring
-(set (make-local-variable 'py-docstring-style) 'django)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;; ---- Lua ----
 
@@ -144,68 +129,33 @@
 
 (setq lua-indent-level 4)
 
-
-;; ---- ESS-mode ----
-
-;; (add-hook 'ess-mode-hook '(autoload 'R-mode "ess-site.el" "" t))
-(autoload 'R-mode "ess-site.el" "ESS" t)
-(add-hook 'ess-mode-hook (lambda () (company-statistics-mode t)))
-
-(setq ess-ask-for-ess-directory nil)
-(setq comint-input-ring-size 1000)
-(setq ess-indent-level 4)
-(setq ess-arg-function-offset 4)
-(setq ess-else-offset 4)
-
-;; ---- AucTex ----
-
-(load "auctex.el" nil t t)
-(load "font-latex")
-
-(add-hook
- 'LaTeX-mode-hook
- (lambda ()
-   'flyspell-mode
-   'flyspell-buffer
-   'LaTeX-math-mode
-   'turn-on-auto-fill
-   'fill-start
-   'my-latex-mode-setup))
-
-(tex-font-setup)
-(setq
- Tex-auto-save t
- Tex-parse-self t
- Tex-save-query nil)
-
-;; (setq TeX-electric-escape t)
-(company-auctex-init)
-
 ;; ---- Text-mode ----
 
-;; (load "init-latex")
-(add-hook 'text-mode-hook
-          (lambda ()
-            'flyspell-mode
-            'turn-on-auto-fill
-            'fill-start))
-
-;; ---- C-mode ----
-
-(setq-default
- c-basic-offset 4
- c-default-style "linux")
-
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'fill-start)
 
 ;; ---- Eshell ----
 
-(setq eshell-history-file-name "~/.tmp/emacs/eshell/history"
-      eshell-last-dir-ring-file-name "~/.tmp/emacs/eshell/lastdir") 
+(setq eshell-history-file-name "~/.tmp/emacs/eshell/history")
+(setq eshell-last-dir-ring-file-name "~/.tmp/emacs/eshell/lastdir")
 
 ;; ---- Scilab ----
 
-(load "scilab-startup")
+;; (load "scilab-startup")
 
+;; ---- Octave ----
+
+;; (autoload 'octave-mode "octave-mod" nil t)
+
+;; ---- matlab-mode ----
+
+(setq matlab-indent-function t)
+(setq matlab-shell-command "matlab")
+(when (executable-find "matlab")
+  (require 'matlab))
 
 ;; ---- END ----
+
 (kill-buffer "*Compile-Log*")
+(kill-buffer "*ESS*")
