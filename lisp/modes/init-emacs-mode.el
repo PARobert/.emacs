@@ -35,3 +35,4 @@
 (add-hook 'emacs-lisp-mode-hook 'my-emacs-mode-map)
 
 
+(provide 'init-emacs-mode)

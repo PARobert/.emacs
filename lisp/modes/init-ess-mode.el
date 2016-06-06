@@ -51,3 +51,6 @@
   (local-unset-key (kbd "<->")))
 
 (add-hook 'R-mode-hook 'mon-R-mode-map)
+
+
+(provide 'init-ess-mode)

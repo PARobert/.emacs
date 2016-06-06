@@ -7,41 +7,31 @@
 
 (require 'python-mode)
 
-;; (add-hook
-;;  'python-mode-hook
-;;  (lambda ()
-;;    (add-to-list 'company-backends 'company-jedi)
-;;    '(fci-mode t)))
-
 (add-hook 'python-mode-hook (add-to-list 'company-backends 'company-jedi))
 (add-hook 'python-mode-hook (fci-mode t))
 
 ;; Complétion par Company
 (set (make-local-variable 'py-electric-close-active-p) t)
-(set (make-local-variable 'py-auto-complete-p) nil)
-(set (make-local-variable 'py-auto-completion-mode-p) nil)
-(set (make-local-variable 'py-company-pycomplete-p) t)
-(set (make-local-variable 'py-complete-auto) 'py-complete)
-(set (make-local-variable 'py-complete-function) 'nil)
+;; (set (make-local-variable 'py-auto-complete-p) nil)
+;; (set (make-local-variable 'py-auto-completion-mode-p) nil)
+;; (set (make-local-variable 'py-company-pycomplete-p) t)
+;; (set (make-local-variable 'py-complete-auto) 'py-complete)
+;; (set (make-local-variable 'py-complete-function) 'nil)
+
 ;; (py-timer-close-completions-p )
 ;; (py-complete-ac-sources )
 ;; (py-shell-module-completion-code "")
 ;; (py-ipython-module-completion-string "")
 
-;; Retour à la ligne automatque
-(set (make-local-variable 'py-auto-fill-mode) t)
-(set (make-local-variable 'py-comment-fill-column) 80)
-(set (make-local-variable 'py-docstring-fill-column) 80)
-
-;; Mise en forme du code python dans un interpréteur shell
-(set (make-local-variable 'py-fontify-shell-buffer-p) t)
-
-;; Auto-enregistrement avant interprétation
-(set (make-local-variable 'py-ask-about-save) nil)
-
-;; Mise en forme du docstring
-(set (make-local-variable 'py-docstring-style) 'django)
-
+(setq py-auto-fill-mode t)
+(setq py-comment-fill-column 80)
+(setq py-docstring-fill-column 80)
+(setq py-ask-about-save nil)
+(setq py-docstring-style 'django)
+(setq py-fontify-shell-buffer-p nil)
+(setq py-split-windows-on-execute-p t)
+(setq py-switch-buffers-on-execute-p nil)
+(setq py-shell-switch-buffers-on-execute-p t)
 
 ;; --------------------------------------------------------------------------------
 ;;     Functions
@@ -135,3 +125,6 @@
   (local-set-key (kbd "<C-M-return>") 'windnew-ipython))
 
 (add-hook 'python-mode-hook 'mon-python-mode-map)
+
+
+(provide 'init-python-mode)

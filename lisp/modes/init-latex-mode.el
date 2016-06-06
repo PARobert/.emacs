@@ -300,8 +300,9 @@
   (local-set-key (kbd "C-s-e C-s-f") 'latex-insert-figure)
   (local-set-key (kbd "C-s-e C-s-t") 'latex-insert-table)
   (local-set-key (kbd "C-s-e C-s-n") 'latex-insert-new)
-  (local-set-key (kbd "C-0") #'run-latexmk))
+  (local-set-key (kbd "C-c C-c") #'run-latexmk))
 
 (add-hook 'LaTeX-mode-hook 'my-latex-mode-map)
 
 
+(provide 'init-latex-mode)
