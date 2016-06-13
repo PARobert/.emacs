@@ -129,17 +129,6 @@
 
 (setq lua-indent-level 4)
 
-;; ---- Text-mode ----
-
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'fill-start)
-
-;; ---- Eshell ----
-
-(setq eshell-history-file-name "~/.tmp/emacs/eshell/history")
-(setq eshell-last-dir-ring-file-name "~/.tmp/emacs/eshell/lastdir")
-
 ;; ---- Scilab ----
 
 ;; (load "scilab-startup")
