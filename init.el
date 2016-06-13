@@ -39,6 +39,7 @@
 (require 'init-ess-mode)
 (require 'init-python-mode)
 (require 'init-c-mode)
+(require 'init-shell-mode)
 
 ;; Empêche l'outil de personnalisation d'emacs de toucher à ce fichier
 (setq custom-file "~/.tmp/emacs/custom/emacs-custom.el")
@@ -58,6 +59,7 @@
         ("\\.py$" . python-mode)
         ("\\.\\(r\\|R\\)$" . R-mode)
         ("\\.\\(c\\|h\\|cpp\\)$" . c++-mode)
+        ("\\(Makefile\\|makefile\\)$" . makefile-mode)
         ("\\.lua$" . lua-mode)
         ("\\.sh$" . sh-mode)
         ("\\.m$" . octave-mode)
