@@ -7,6 +7,8 @@
 ;; options about shell-mode, commands and options.
 ;; --------------------------------------------------------------------------------
 
+(setq eshell-history-file-name "~/.tmp/emacs/eshell/history")
+(setq eshell-last-dir-ring-file-name "~/.tmp/emacs/eshell/lastdir")
 
 ;; --------------------------------------------------------------------------------
 ;;     Functions

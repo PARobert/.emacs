@@ -11,7 +11,8 @@
 (add-hook 'python-mode-hook (fci-mode t))
 
 ;; Complétion par Company
-(set (make-local-variable 'py-electric-close-active-p) t)
+;; (set (make-local-variable 'py-electric-close-active-p) t)
+
 ;; (set (make-local-variable 'py-auto-complete-p) nil)
 ;; (set (make-local-variable 'py-auto-completion-mode-p) nil)
 ;; (set (make-local-variable 'py-company-pycomplete-p) t)
@@ -43,7 +44,7 @@
   (buffer-live-p (get-buffer "*ipython*")))
   
 (defun load-ipython (version &optional filename)
-  "Create a new Ipython buffer, optionnaly running a given file"
+  "Create a new Ipython buffer, optionnaly running a given file."
   (interactive)
   (set-buffer
    (pcase version

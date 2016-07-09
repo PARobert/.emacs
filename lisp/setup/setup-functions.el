@@ -22,6 +22,14 @@ emacs."
                     week))
         (delete-file file)))))
 
+(defadvice kill-line (before check-position activate)
+  "Remove spaces after killing a line.
+It comes from http://www.emacswiki.org/emacs/AutoIndentation"
+  (if (and (eolp) (not (bolp)))
+      (progn (forward-char 1)
+             (just-one-space 0)
+             (backward-char 1))))
+
 (defun my-fill-nobreak-predicate ()
   "Ne pas revenir à la ligne n'importe où"
   (save-match-data
@@ -279,63 +287,12 @@ and `defcustom' forms reset their default values."
   (interactive "r\np")
   (if (region-active-p) (move-region-down start end n) (move-line-down n)))
 
-;; --- Terminal ----
-
-(defun exist-terminal-p ()
-  "Renvoie t si le buffer *terminal* existe et nil sinon"
-  (interactive)
-  (buffer-live-p (get-buffer "*terminal*")))
-
-(defun ouverture-terminal ()
-  "Ouverture efficace d'un terminal"
-  (interactive)
-  (split-auto)
-  (term "bash")
-  (term-mode)
-  (term-char-mode)
-  (global-set-key (kbd "C-c t") 'fermeture-terminal))
-
-(defun aller-terminal ()
-  "Aller à la fenêtre de terminal"
-  (interactive)
-  (setq window (get-buffer-window "*terminal*"))
-  (select-window window))
-
-(defun windnew-terminal ()
-  "Recherche ou ouvre un terminal"
-  (interactive)
-  (if (exist-terminal-p)
-      (aller-terminal)
-    (ouverture-terminal)))
-
-(defun fermeture-terminal ()
-  "Fermeture efficace d'un terminal"
-  (interactive)
-  (term-send-string "*terminal*" "exit")
-  (kill-buffer-and-window)
-  (global-set-key (kbd "C-c C-t") 'ouverture-terminal))
-
-(defadvice fermeture-terminal (around stfu compile activate)
-  "Retirer la question 'un processus existe...' à l'exécution de fermeture-terminal"
-  (flet ((yes-or-no-p (&rest args) t)
-         (y-or-n-p (&rest args) t))
-    ad-do-it))
-
 ;; ---- Fill-mode ----
 
 (defun fill-start ()
   "Boucle de démarrage de fill-mode, à ajouter dans les hook"
   (auto-fill-mode 1)
   (setq default-justification 'full))
-
-;; ---- C-mode ----
-
-(defun mon-c-compilation ()
-  "Compilation du buffer courrant avec g++"
-  (interactive)
-  (save-buffer)
-  (let ((file (file-name-nondirectory buffer-file-name)))
-	    (compile (concat "g++ " file " -o "  (file-name-sans-extension file)))))
 
 ;; ---- Lua ----
 

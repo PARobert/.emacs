@@ -1,0 +1,100 @@
+;; --------------------------------------------------------------------------------
+;; Filename : init-shell-mode.el
+;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
+;; 
+;; Description : init file for emuling a shell in emacs.
+;; --------------------------------------------------------------------------------
+
+
+;; --------------------------------------------------------------------------------
+;;     Functions
+;; --------------------------------------------------------------------------------
+
+(defun exist-shell-p ()
+  "Renvoie t si le buffer *terminal* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*shell*")))
+
+(defun open-shell ()
+  "Ouverture efficace d'un terminal"
+  (interactive)
+  (split-auto)
+  (shell)
+  (global-set-key (kbd "C-c C-t") 'close-shell))
+
+(defun go-to-shell ()
+  "Aller à la fenêtre de terminal"
+  (interactive)
+  (setq window (get-buffer-window "*shell*"))
+  (select-window window))
+
+(defun windnew-shell ()
+  "Recherche ou ouvre un terminal"
+  (interactive)
+  (if (exist-shell-p)
+      (go-to-shell)
+    (open-shell)))
+
+(defun close-shell ()
+  "Fermeture efficace d'un terminal"
+  (interactive)
+  (term-send-string "*shell*" "exit")
+  (kill-buffer-and-window)
+  (global-set-key (kbd "C-c C-t") 'open-shell))
+
+(defadvice close-shell (around stfu compile activate)
+  "Retirer la question 'un processus existe...' à l'exécution de fermeture-terminal"
+  (flet ((yes-or-no-p (&rest args) t)
+         (y-or-n-p (&rest args) t))
+    ad-do-it))
+
+;; (defun exist-terminal-p ()
+;;   "Renvoie t si le buffer *terminal* existe et nil sinon"
+;;   (interactive)
+;;   (buffer-live-p (get-buffer "*terminal*")))
+
+;; (defun ouverture-terminal ()
+;;   "Ouverture efficace d'un terminal"
+;;   (interactive)
+;;   (split-auto)
+;;   (term "bash")
+;;   (term-mode)
+;;   (term-char-mode)
+;;   (global-set-key (kbd "C-c t") 'fermeture-terminal))
+
+;; (defun aller-terminal ()
+;;   "Aller à la fenêtre de terminal"
+;;   (interactive)
+;;   (setq window (get-buffer-window "*terminal*"))
+;;   (select-window window))
+
+;; (defun windnew-terminal ()
+;;   "Recherche ou ouvre un terminal"
+;;   (interactive)
+;;   (if (exist-terminal-p)
+;;       (aller-terminal)
+;;     (ouverture-terminal)))
+
+;; (defun fermeture-terminal ()
+;;   "Fermeture efficace d'un terminal"
+;;   (interactive)
+;;   (term-send-string "*terminal*" "exit")
+;;   (kill-buffer-and-window)
+;;   (global-set-key (kbd "C-c C-t") 'ouverture-terminal))
+
+;; (defadvice fermeture-terminal (around stfu compile activate)
+;;   "Retirer la question 'un processus existe...' à l'exécution de fermeture-terminal"
+;;   (flet ((yes-or-no-p (&rest args) t)
+;;          (y-or-n-p (&rest args) t))
+;;     ad-do-it))
+
+
+;; --------------------------------------------------------------------------------
+;;     Key map
+;; --------------------------------------------------------------------------------
+
+;; (global-set-key (kbd "C-c C-t") 'shell)
+(global-set-key (kbd "C-c C-t") 'windnew-shell)
+
+
+(provide init-shell-mode)

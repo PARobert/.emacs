@@ -1,11 +1,17 @@
 ;; --------------------------------------------------------------------------------
-;; Filename : init-emacs-mode.el
+;; Filename : init-java-mode.el
 ;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
 ;; 
-;; Description : init file for the emacs-lisp-mode.
+;; Description : init file for java mode.
 ;; --------------------------------------------------------------------------------
 
+(require 'cc-mode)
+
+(setq-default c-basic-offset 4)
+(setq-default c-default-style '((java-mode . "java")))
+(setq-default c-indent-tabs-mode t)
+
 
 ;; --------------------------------------------------------------------------------
 
-(provide 'init-emacs-mode)
+(provide 'init-java-mode)

@@ -1,0 +1,508 @@
+;; Pierre-Antoine ROBERT <pierreantoine dot robert at gmail dot com>
+
+;; ---- Généraux
+
+(defun load-user-init-file ()
+  "Éditer rapidement le fichier init."
+  (interactive)
+  (find-file-other-window user-init-file))
+
+(defun suppression-automatique-demarrage ()
+  "Suppression automatique des vielles sauvegardes de fichiers édités sur 
+emacs."
+  (message "Suppression des vielles sauvegardes...")
+  (let ((week (* 60 60 24 7))
+        (current (float-time (current-time))))
+    (dolist (file (directory-files temporary-file-directory t))
+      (when (and (backup-file-name-p file)
+                 (> (- current (float-time (fifth (file-attributes file))))
+                    week))
+        (delete-file file)))))
+
+(defun my-fill-nobreak-predicate ()
+  "Ne pas revenir à la ligne n'importe où"
+  (save-match-data
+    (or (looking-at "[ \t]*[])}»!?;:]")
+        (looking-at "[ \t]*\\.\\.\\.")
+        (save-excursion
+          (skip-chars-backward " \t")
+          (backward-char 1)
+          (looking-at "[([{«]")))))
+
+(defun demarrer-command-log ()
+  "Demarrer la command-log"
+  (interactive)
+  (mwe:log-keyboard-commands)
+  (mwe:open-command-log-buffer)
+  (other-window -1))
+
+(defun compile-fenetre-actuelle ()
+  "Byte-compile le buffer courrant"
+  (interactive)
+  (when (eq major-mode 'emacs-lisp-mode)
+    (save-buffer)
+    (byte-compile-file buffer-file-name)))
+
+(defun delete-current-line ()
+  "Delete (not kill) the current line."
+  (interactive)
+  (save-excursion
+    (delete-region
+     (progn (forward-visible-line 0) (point))
+     (progn (forward-visible-line 1) (point)))))
+
+(defun copie-ligne-ou-region-kill ()
+  "Copie la ligne ou la région actuelle"
+  (interactive)
+  (if (use-region-p)
+      (progn
+        (setq my-text (buffer-substring (region-beginning) (region-end)))
+        (delete-region (region-beginning) (region-end)))
+    (setq my-text (thing-at-point 'line))
+    (delete-current-line)))
+
+(defun copie-ligne-ou-region ()
+  "Copie la ligne ou la région actuelle"
+  (interactive)
+  (if (use-region-p)
+      (setq my-text (buffer-substring (region-beginning) (region-end)))
+    (setq my-text (thing-at-point 'line))))
+
+(defun my/eval-buffer ()
+  "Execute the current buffer as Lisp code.
+Top-level forms are evaluated with `eval-defun' so that `defvar'
+and `defcustom' forms reset their default values."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (forward-sexp)
+      (eval-defun nil))))
+
+;; ---- spliter la fenêtre ----
+
+(defun split-droite ()
+  "Split horizontalement la fenêtre vers la droite"
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1)
+  (switch-to-buffer "*scratch*"))
+
+(defun split-gauche ()
+  "Split horizontalement la fenêtre vers la gauche"
+  (interactive)
+  (split-window-horizontally)
+  (switch-to-buffer "*scratch*"))
+
+(defun split-bas ()
+  "Split verticalement la fenêtre vers le bas"
+  (interactive)
+  (split-window-vertically)
+  (other-window 1)
+  (switch-to-buffer "*scratch*"))
+
+(defun split-haut ()
+  "Split verticalement la fenêtre vers le haut"
+  (interactive)
+  (split-window-vertically)
+  (switch-to-buffer "*scratch*"))
+
+(defun split-auto ()
+  "Spliter automatiquement la fenêtre"
+  (interactive)
+  (if (or (< 160 (window-width))
+          (< (* 2 (window-height)) (window-width)))
+      (split-droite)
+    (split-bas)))
+
+(defun deplacer-fenetre-droite ()
+  "Déplacer horizontalement le buffer à droite"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-right)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-right))
+
+(defun deplacer-fenetre-gauche ()
+  "Déplacer horizontalement le buffer à gauche"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-left)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-left))
+
+(defun deplacer-fenetre-bas ()
+  "Déplacer verticalement le buffer vers le bas"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-down)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-down))
+
+(defun deplacer-fenetre-haut ()
+  "Déplacer verticalement le buffer vers le haut"
+  (interactive)
+  (save-selected-window
+  (setq my-buffer-origine (current-buffer))
+  (windmove-up)
+  (setq my-buffer-destination (current-buffer))
+  (switch-to-buffer my-buffer-origine))
+  (switch-to-buffer my-buffer-destination)
+  (windmove-up))
+
+(defun elargir-fenetre-horizontalement ()
+  "Elargir horizontalement d'une colonne la fenêtre"
+  (interactive)
+  (enlarge-window-horizontally 1))
+
+(defun retrecir-fenetre-horizontalement ()
+  "Rétrécir horizontalement d'une colone la fenêtre"
+  (interactive)
+  (shrink-window-horizontally 1))
+
+(defun elargir-fenetre-verticalement ()
+  "Elargir verticalement d'une colonne la fenêtre"
+  (interactive)
+  (enlarge-window 1))
+
+(defun retrecir-fenetre-verticalement ()
+  "Rétrécir verticallement d'une colone la fenêtre"
+  (interactive)
+  (shrink-window 1))
+
+(defun fermer-fenetre ()
+  "Fermer la fenêtre courante"
+  (interactive)
+  (delete-window))
+
+;; --- Terminal ----
+
+(defun exist-terminal-p ()
+  "Renvoie t si le buffer *terminal* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*terminal*")))
+
+(defun ouverture-terminal ()
+  "Ouverture efficace d'un terminal"
+  (interactive)
+  (split-auto)
+  (term "bash")
+  (term-mode)
+  (term-char-mode)
+  (global-set-key (kbd "C-c t") 'fermeture-terminal))
+
+(defun aller-terminal ()
+  "Aller à la fenêtre de terminal"
+  (interactive)
+  (setq window (get-buffer-window "*terminal*"))
+  (select-window window))
+
+(defun windnew-terminal ()
+  "Recherche ou ouvre un terminal"
+  (interactive)
+  (if (exist-terminal-p)
+      (aller-terminal)
+    (ouverture-terminal)))
+
+(defun fermeture-terminal ()
+  "Fermeture efficace d'un terminal"
+  (interactive)
+  (term-send-string "*terminal*" "exit")
+  (kill-buffer-and-window)
+  (global-set-key (kbd "C-c C-t") 'ouverture-terminal))
+
+(defadvice fermeture-terminal (around stfu compile activate)
+  "Retirer la question 'un processus existe...' à l'exécution de fermeture-terminal"
+  (flet ((yes-or-no-p (&rest args) t)
+         (y-or-n-p (&rest args) t))
+    ad-do-it))
+
+;; ---- Python ----
+
+(defun exist-ipython-p ()
+  "Renvoie t si le buffer *ipython* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*ipython*")))
+  
+(defun load-ipython (version &optional filename)
+  "Create a new Ipython buffer, optionnaly running a given file"
+  (interactive)
+  (set-buffer
+   (pcase version
+     ("2" (make-term "ipython" "/usr/bin/env" nil "ipython" (or filename "")
+                    "--TerminalIPythonApp.force_interact=True"))
+     ("3" (make-term "ipython" "/usr/bin/env" nil "ipython3" (or filename "")
+                    "--TerminalIPythonApp.force_interact=True"))))
+  (term-mode)
+  (term-char-mode)
+  (switch-to-buffer "*ipython*"))
+
+(defun reload-ipython (version &optional filename)
+  "Relancer le terminal ipython"
+  (interactive)
+  (setq window (get-buffer-window "*ipython*"))
+  (if window
+      (select-window window)
+    (split-auto)
+    (set-buffer "*ipython*"))
+  (kill-buffer)
+  (load-ipython version filename))
+
+(defadvice reload-ipython (around stfu compile activate)
+  "Retirer la question 'un processus existe...' à l'exécution de reload-ipython"
+  (flet ((yes-or-no-p (&rest args) t)
+         (y-or-n-p (&rest args) t))
+    ad-do-it))
+
+(defun windnew-ipython (&optional version)
+  "Exécute le buffer courrant dans un terminal ipython"
+  (interactive)
+  (save-buffer)
+  (if (exist-ipython-p)
+      (reload-ipython python-version (buffer-file-name))
+    (setq origine-python (get-buffer-window (current-buffer)))
+    (split-auto)
+    (load-ipython version (buffer-file-name))
+    (setq python-version version))
+  (select-window origine-python))
+
+(defun windnew-ipython-2 ()
+  "Exécute le buffer courrant dans un terminal ipython 2"
+  (interactive)
+  (windnew-ipython "2"))
+  
+(defun windnew-ipython-3 ()
+  "Exécute le buffer courrant dans un terminal ipython 3"
+  (interactive)
+  (windnew-ipython "3"))
+
+(defun execute-ipython (proc code)
+  "Exécute du code copié dans un terminal ipython"
+  (term-send-string proc code))
+
+(defun interprete-ipython ()
+  "Interprète une partie de code"
+  (interactive)
+  (save-excursion
+  (copie-ligne-ou-region)
+  (if (not 'exist-ipython-p)
+      (load-ipython "")
+    (setq window (get-buffer-window "*ipython*")))
+  (execute-ipython "*ipython*" my-text))
+  (next-line))
+
+;; ---- R ----
+
+(defun mon-R-eval ()
+  "Evaluer du code R, que ce soit la ligne ou la région"
+  (interactive)
+  (if (use-region-p)
+      (call-interactively 'ess-eval-region)
+    (call-interactively 'ess-eval-line-and-step)))
+  
+;; ---- Company-mode ----
+
+(defun exist-company-help-p ()
+  "Renvoie t si le buffer *Help* existe et nil sinon"
+  (interactive)
+  (buffer-live-p (get-buffer "*Help*")))
+
+(defun indent-or-complete ()
+  (interactive)
+  (if (looking-at "\\_>")
+      (company-complete-common)
+    (indent-according-to-mode)))
+
+(defun company-quick-description ()
+  "Ouvre la description des fonctions dans une nouvelle fenêtre"
+  (interactive)
+  (if (exist-company-help-p)
+      (describe-function (function-called-at-point))
+    (save-excursion
+      (split-auto)
+      (switch-to-buffer "*Help*"))
+      (help-mode))
+    (describe-function (function-called-at-point)))
+
+;; ---- Fill-mode ----
+
+(defun fill-start ()
+  "Boucle de démarrage de fill-mode, à ajouter dans les hook"
+  (auto-fill-mode 1)
+  (setq default-justification 'full))
+
+;; ---- LaTeX-mode ----
+
+(defun my-latex-mode-setup ()
+  "Boucle de démarrage du mode LaTeX"
+  (setq-local company-backends
+              (append '(company-math-symbols-latex company-latex-commands)
+                      company-backends)))
+
+(defun latex-bib-name ()
+  "renvoie le nom du document bib"
+  (interactive)
+  (setq my-text (buffer-substring (- (point) 1) (- (search-forward-regexp "\[\s}\]") 1)))
+  )
+
+;; (defun latex-compile ()
+;;   "Compilation du fichier courrant"
+;;   (interactive)
+;;   (save-buffer)
+;;   (save-excursion
+;;     (message "Compilation Latex")
+;;     (set-process-sentinel
+;;      (TeX-command "LaTeX" 'TeX-master-file)
+;;      (progn
+;;        (beginning-of-buffer)
+;;        (if (not (search-forward-regexp "\[\s\\]bibliography\[\s{\]." nil t nil))
+;;            (progn
+;;              (message "Compilation Bibtex")
+;;              (set-process-sentinel
+;;               (TeX-command "BibTeX" 'TeX-master-file)
+;;               (set-process-sentinel
+;;                (TeX-command "LaTeX" 'TeX-master-file)
+;;                (TeX-command "LaTeX" 'TeX-master-file)))))))))
+
+;; (defun latex-compile ()
+;;   "Compilation du fichier courrant"
+;;   (interactive)
+;;   (save-buffer)
+;;   (TeX-LaTeX-sentinel (TeX-command "LaTeX" 'TeX-master-file) "LaTeX1")
+;;   (let ((case-fold-search nil))
+;;     (when (string-match "\\(finish\\|exited\\)" "LaTeX1")
+;;       (message "LaTeX")))
+;;   (TeX-BibTeX-sentinel (TeX-command "BibTeX" 'TeX-master-file) "BibTeX")
+;;   (let ((case-fold-search nil))
+;;     (when (string-match "\\(finish\\|exited\\)" "LaTeX1")
+;;       (message "BibTeX")))
+;;   (TeX-LaTeX-sentinel (TeX-command "LaTeX" 'TeX-master-file) "LaTeX2")
+;;   (let ((case-fold-search nil))
+;;     (when (string-match "\\(finish\\|exited\\)" "LaTeX2")
+;;       (message "LaTeX2")))
+;;   (TeX-LaTeX-sentinel (TeX-command "LaTeX" 'TeX-master-file) "LaTeX3")
+;;   (let ((case-fold-search nil))
+;;     (when (string-match "\\(finish\\|exited\\)" "LaTeX3")
+;;       (message "LaTeX3"))))
+
+(defun latex-compile-latex ()
+  "Compile with latex"
+  (interactive)
+  (TeX-command "LaTeX" 'TeX-master-file))
+
+(defun latex-compile-bibtex ()
+  "Compile with bibtex"
+  (interactive)
+  (TeX-command "BibTeX" 'TeX-master-file))
+
+(TeX-command-sequence (list "LaTeX" "LaTeX" "BibTeX" "LaTeX") nil 'TeX-master-file)
+TeX-command-
+(TeX-command-s "LaTeX" t)
+(car)
+
+(defun latex-compile-error ()
+  "Compile error"
+  (interactive)
+  (let ((compile-error "Sorry, none compilation methods matchs with your's"))
+    (message compile-error)))
+
+(defun message-log-blank ()
+  "Add a blanck line in the message log"
+  (interactive)
+  (let ((blank " "))
+    (message blank)))
+
+;; (defun latex-freez-until-latex-process-ended (process)
+;;   "Find in the message log the process's end flag"
+;;   (interactive)
+;;   (let ((initial-buffer (current-buffer)))
+;;     (pcase process
+;;       ("LaTeX" (latex-compile-latex))
+;;       ("BibTeX" (latex-compile-bibtex))
+;;       (or (latex-compile-error)))
+;;     (switch-to-buffer (messages-buffer))
+;;     (goto-char (point-max))
+;;     (backward-paragraph)
+;;     (while (not (if (search-forward-regexp
+;;                 (concat "\#\<process " process "\>") nil t nil) t nil))
+;;       (sleep-for 1))
+;;     (switch-to-buffer initial-buffer)))
+
+(defun latex-freez-until-latex-process-ended (process)
+  "Find in the message log the process's end flag"
+  (interactive)
+  (let ((initial-buffer (current-buffer)))
+    (pcase process
+      ("LaTeX" (latex-compile-latex))
+      ("BibTeX" (latex-compile-bibtex))
+      (or (latex-compile-error)))
+    ;; (setq process (TeX-process (buffer-name initial-buffer)))
+    (let ((processb (get-buffer-process initial-buffer)))
+      (message processb)
+      (while (eq (process-status processb) 'run) (sleep-for 1)))
+    (switch-to-buffer initial-buffer)))
+
+(defun latex-compile ()
+  "Compilation du fichier courrant"
+  (interactive)
+  (save-buffer)
+  ;; (message-log-blank)
+  (latex-freez-until-latex-process-ended "LaTeX")
+  (message-log-blank)
+  (latex-freez-until-latex-process-ended "BibTeX"))
+  
+    ;; (call-interactively 'latex-compile-bibtex)
+  ;; (let ((bibtex-id (process-id "#<process BibTeX>")))
+  ;;   (message "%s" bibtex-id))
+  ;; (call-interactively (latex-compile-latex))
+  ;; (call-interactively (latex-compile-latex)))
+  ;; (when (string-match "process LaTeX" "LaTeX1")
+  ;;   (message "LaTeX"))
+  ;; (TeX-BibTeX-sentinel (TeX-command "BibTeX" 'TeX-master-file) "BibTeX")
+  ;; (when (string-match "process BibTeX" "BibTeX")
+  ;;   (message "BibTeX"))
+  ;; (TeX-LaTeX-sentinel (TeX-command "LaTeX" 'TeX-master-file) "LaTeX2")
+  ;; (when (string-match "\\(finish\\|exited\\|errors\\)" "LaTeX2")
+  ;;   (message "LaTeX")))
+
+
+
+(defun latex-insert-string (string-before string-after)
+  "insérer du texte"
+  (interactive)
+  (copie-ligne-ou-region-kill)
+  (insert string-before my-text string-after))
+
+(defun latex-insert-eq ()
+  "Inserer un environnement eq"
+  (interactive)
+  (latex-insert-string "\\begin{eqnarray}\n" "\n\\end{eqnarray}"))
+
+
+
+;; ---- C-mode ----
+
+(defun mon-c-compilation ()
+  "Compilation du buffer courrant avec g++"
+  (interactive)
+  (save-buffer)
+  (let ((file (file-name-nondirectory buffer-file-name)))
+	    (compile (concat "g++ " file " -o "  (file-name-sans-extension file)))))
+
+;; ---- Lua ----
+
+(defun lua-send-line-or-region ()
+  "Interprète une partie de code, que ce soit une ligne ou une région"
+  (interactive)
+  (if (use-region-p)
+      (lua-send-region (region-beginning) (region-end))
+    (lua-send-current-line)))

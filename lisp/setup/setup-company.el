@@ -17,7 +17,7 @@
 (add-to-list 'company-backends 'company-math-symbols-unicode 'company-c-headers)
 
 (setq company-tooltip-limit 20)
-(setq company-idle-delay 0.2)
+(setq company-idle-delay 0.05)
 (setq company-echo-delay 0)
 (setq company-show-numbers t)
 (setq company-minimum-prefix-length 2)
@@ -49,6 +49,15 @@
       (help-mode))
     (describe-function (function-called-at-point)))
 
+(defun my/python-company ()
+  (add-to-list 'company-backends 'company-jedi))
+
+;; --------------------------------------------------------------------------------
+;;     Hooks
+;; --------------------------------------------------------------------------------
+
+(add-hook 'python-mode-hook 'my/python-company)
+
 ;; --------------------------------------------------------------------------------
 ;;     Fonts
 ;; --------------------------------------------------------------------------------
@@ -72,5 +81,7 @@
 (global-set-key (kbd "C-c h") 'company-quick-description)
 
 
+
+;; --------------------------------------------------------------------------------
 
 (provide 'setup-company)

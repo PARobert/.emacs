@@ -7,7 +7,6 @@
 
 (require 'color-theme)
 (require 'paren)
-(require 'smartparens-config)
 (require 'fill-column-indicator)
 (require 'ido)
 (require 'yasnippet)

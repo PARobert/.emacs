@@ -28,7 +28,6 @@
 (setq TeX-electric-sub-and-superscript t) 
 
 (defvar my-text)
-(defvar latex-title-prefix-string "% ")
 
 ;; --------------------------------------------------------------------------------
 ;;     Local theme
@@ -185,46 +184,17 @@
 (defun latex-insert-new ()
   "Insert a new document"
   (interactive)
-  (insert "\\documentclass[12pt,a4paper,article]{article}\n%---- "
-          "Packages du document\n\\usepackage[utf8]{inputenc}\n"
-          "\\usepackage[T1]{fontenc}\\usepackage{lmodern,textcomp}"
-          "\n\\usepackage[french]{babel}\n\\usepackage{apacite, caption,"
-          " tabularx, booktabs, fancyhdr, geometry, graphicx, multicol, "
-          "multirow, appendix, listings, verbatim, titletoc, titlesec, titling, "
-          "amsmath, amssymb, amsfonts, amsthm, mathtools, stmaryrd, xfrac}"
-          "\n\\usepackage[dvipsnames,svgnames,x11names]{xcolor}\n\\usepackage"
-          "[french,boxed]{algorithm2e}\n\\usepackage{dsfont}\n\n%---- Chemin"
-          " d'accès\n\\graphicspath{{Images/}}        % Chemin d'accès aux "
-          "graphiques\n\n%---- Mise en page\n\\geometry{hmargin=3.5cm, "
-          "vmargin=2.5cm}  % Réglage des marges\n\\setlength{\\parskip}{0.4cm}"
+  (insert "\\documentclass[12pt,a4paper,article]{memoir}\n"
+          "\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n"
+          "\\usepackage{lmodern,textcomp}\n\\usepackage[french]{babel}\n"
+          "\\usepackage{apacite}\n\\usepackage{geometry}\n\n"
+          "%-- Mise en page\n\\geometry{hmargin=3.5cm, vmargin=2.5cm}"
+          "  % Réglage des marges\n\\setlength{\\parskip}{0.4cm}"
           "  % Interligne entre paragraphes\n\\renewcommand{\\baselinestretch}{1}"
-          " % Interliges\n\\setcounter{secnumdepth}{6} % Profondeur de la"
-          " numérotation des titres\n\n%---- Francisation\n\\addto\\"
-          "captionsfrench{\\def\\tablename{\\bsc{Tableau}}}\n\\addto\\"
-          "captionsfrench{\\def\\figurename{\\bsc{Figure}}}\n\\renewcommand"
-          "{\\lstlistlistingname}{\\textbf{Codes}} %Redéfinition Liste par"
-          " Code\n\\renewcommand{\\lstlistingname}{\\textbf{Code}} %Redéfinition"
-          " Liste par Code\n\n%---- Mise en forme des titres de chapitres\n"
-          "\\setcounter{secnumdepth}{3}     % 2\n\\setcounter{tocdepth}{3}"
-          "        % 2\n\n\\makeatletter\n\\def\\@seccntformat#1{\\protect"
-          "\\makebox[0pt][r]{\\csname the#1\\endcsname\\quad}}\n\\makeatother"
-          "\n\n\\renewcommand{\\thesection}{\\arabic{section}} % Modification"
-          " du titre de section\n\\renewcommand{\\thesubsection}{\\arabic"
-          "{section}.\\arabic{subsection}} % Modification du titre de sous"
-          " section\n\\renewcommand{\\thesubsubsection}{\\arabic{section}.\\arabic"
-          "{subsection}.\\arabic{subsubsection}} % Modification du titre de"
-          " sous section\n\n\\titlespacing*{\\section}{}{1cm}{.75cm}\n\\"
-          "titlespacing*{\\subsection}{}{.5cm}{.75cm}\n\\titlespacing*{\\"
-          "subsubsection}{}{.5cm}{.75cm}\n\n%---- Page de titre du document"
-          "\n\\title{}\n\\author{Pierre-Antoine \\textsc{Robert}\\thanks{2A "
-          "(Ensae), Pierre.Antoine.ROBERT@ensae-paristech.fr}}\n\\date{}\n"
-          "\n%%% BEGIN DOCUMENT %%%\n\n\\begin{document}\n\\maketitle\n\n\n\n%"
-          " \\clearpage\n% \\newpage\n% \\nocite{*}\n% \\def\\refname{"
-          "Bibliographie}\n% \\bibliographystyle{apacite}\n% \\bibliography"
-          "{Bibliographie}\n\n\\end{document}")
-  (forward-line -8)
-  (end-of-line)
-  (backward-char))
+          " % Interligne\n\\renewcommand{\\thesection}{\\arabic{section}}"
+          " % Modification du titre de section\n\n\\begin{document}"
+          "\n\n\\end{document}")
+  (forward-line -1))
 
 (defun latex-insert-right-par ()
   "Insert \right)"
@@ -280,25 +250,6 @@
          master-file)
     (minibuffer-message "latexmk done")))
 
-(defun my-latex-title-dash-line ()
-  "Insert dashed line"
-  (insert latex-title-prefix-string)
-  (insert-char ?- fill-column)
-  (insert "\n"))
-
-(defun my-latex-title (title)
-  (interactive "sEnter the title : ")
-  (my-latex-title-dash-line)
-  (insert latex-title-prefix-string)
-  (insert "    " title "\n")
-  (my-latex-title-dash-line))
-
-(defun my-latex-line ()
-  "Insert dashed line"
-  (interactive)
-  (my-latex-title-dash-line)
-  (insert "\n"))
-
 ;; --------------------------------------------------------------------------------
 ;;     Mode-map
 ;; --------------------------------------------------------------------------------
@@ -321,9 +272,7 @@
   (local-set-key (kbd "C-s-e C-s-f") 'latex-insert-figure)
   (local-set-key (kbd "C-s-e C-s-t") 'latex-insert-table)
   (local-set-key (kbd "C-s-e C-s-n") 'latex-insert-new)
-  (local-set-key (kbd "C-c C-c") #'run-latexmk)
-  (local-set-key (kbd "C-s-t") 'my-latex-title)
-  (local-set-key (kbd "C-s-l") 'my-latex-line))
+  (local-set-key (kbd "C-c C-c") #'run-latexmk))
 
 (add-hook 'LaTeX-mode-hook 'my-latex-mode-map)
 

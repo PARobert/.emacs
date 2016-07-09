@@ -1,0 +1,14 @@
+;; --------------------------------------------------------------------------------
+;; Filename : setup-smartparens.el
+;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
+;; 
+;; Description : setup file for smartparens.
+;; --------------------------------------------------------------------------------
+
+(require 'smartparens-config)
+
+
+;; (add-hook 'LaTeX-mode-hook #'smartparens-mode)
+(sp-with-modes 'LaTeX-mode (sp-local-pair 'LaTeX-mode "$" "$"))
+
+(provide 'setup-smartparens)
