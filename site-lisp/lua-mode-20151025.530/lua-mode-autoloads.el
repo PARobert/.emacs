@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "lua-mode" "lua-mode.el" (22080 45719 861919
-;;;;;;  957000))
+;;;### (autoloads nil "lua-mode" "lua-mode.el" (22304 33556 514308
+;;;;;;  423000))
 ;;; Generated autoloads from lua-mode.el
 
 (autoload 'lua-mode "lua-mode" "\
@@ -27,8 +27,8 @@ When called interactively, switch to the process buffer.
 
 ;;;***
 
-;;;### (autoloads nil nil ("init-tryout.el" "lua-mode-pkg.el") (22080
-;;;;;;  45719 979570 579000))
+;;;### (autoloads nil nil ("init-tryout.el" "lua-mode-pkg.el") (22304
+;;;;;;  33556 551078 164000))
 
 ;;;***
 

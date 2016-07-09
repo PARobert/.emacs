@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil nil ("auto-complete-auctex.el") (22055 62386
-;;;;;;  156751 319000))
+;;;### (autoloads nil nil ("auto-complete-auctex-pkg.el" "auto-complete-auctex.el")
+;;;;;;  (22304 33458 173700 70000))
 
 ;;;***
 

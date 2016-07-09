@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads nil nil ("python-environment-pkg.el" "python-environment.el"
-;;;;;;  "test-python-environment.el") (22028 58731 571737 905000))
+;;;;;;  "test-python-environment.el") (22304 33477 156579 914000))
 
 ;;;***
 

@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "mwe-log-commands" "mwe-log-commands.el" (22046
-;;;;;;  8060 80510 325000))
+;;;### (autoloads nil "mwe-log-commands" "mwe-log-commands.el" (22304
+;;;;;;  33573 902309 165000))
 ;;; Generated autoloads from mwe-log-commands.el
 
 (autoload 'mwe:log-keyboard-commands "mwe-log-commands" "\
@@ -18,6 +18,11 @@ Opens (and creates, if non-existant) a buffer used for logging keyboard commands
 If ARG is Non-nil, the existing command log buffer is cleared.
 
 \(fn &optional ARG)" t nil)
+
+;;;***
+
+;;;### (autoloads nil nil ("mwe-log-commands-pkg.el") (22304 33573
+;;;;;;  964818 573000))
 
 ;;;***
 

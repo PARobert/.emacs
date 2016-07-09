@@ -3,7 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil nil ("savekill.el") (22055 59453 352440 189000))
+;;;### (autoloads nil nil ("savekill-pkg.el" "savekill.el") (22304
+;;;;;;  33587 158430 93000))
 
 ;;;***
 
