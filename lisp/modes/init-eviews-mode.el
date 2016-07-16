@@ -1,4 +1,4 @@
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 ;; Filename : init-eviews-mode.el
 ;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
 ;; 
@@ -6,25 +6,12 @@
 ;; Bloggs <vapniks@yahoo.com> and completed by me.
 ;; 
 ;; Copyleft (C) 2013, Joe Bloggs, all rites reversed.
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
-(defun eviews-mode ()
-  "Major mode for editing eviews programs."
-  (interactive)
-  (kill-all-local-variables)
-  (set-syntax-table eviews-mode-syntax-table)
-  (use-local-map eviews-mode-map)
-  (set (make-local-variable 'font-lock-defaults) '(eviews-font-lock-keywords nil t))
-  (set (make-local-variable 'indent-line-function) 'eviews-indent-line)
-  (setq comment-start-skip "' ")
-  (setq comment-start "' ")
-  (setq major-mode 'eviews-mode)
-  (setq mode-name "Eviews")
-  (run-hooks 'eviews-mode-hook))
 
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 ;;     Variables
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (defvar eviews-mode-hook nil)
 (defvar eviews-indent 4)
@@ -66,9 +53,27 @@
     eviews-mode-syntax-table)
   "Syntax table for eviews-mode.")
 
-;; --------------------------------------------------------------------------------
+(define-abbrev-table 'eviews-mode-abbrev-table '())
+
+;; -----------------------------------------------------------------------------
 ;;     Functions
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
+
+(defun eviews-mode ()
+  "Major mode for editing eviews programs."
+  (interactive)
+  (kill-all-local-variables)
+  (set-syntax-table eviews-mode-syntax-table)
+  (setq local-abbrev-table eviews-mode-abbrev-table)
+  (use-local-map eviews-mode-map)
+  (set (make-local-variable 'font-lock-defaults)
+       '(eviews-font-lock-keywords nil t))
+  (set (make-local-variable 'indent-line-function) 'eviews-indent-line)
+  (setq comment-start-skip "' ")
+  (setq comment-start "' ")
+  (setq major-mode 'eviews-mode)
+  (setq mode-name "Eviews")
+  (run-hooks 'eviews-mode-hook))
 
 (defun eviews-indent-line ()
   "Indent current line as eviews code."
@@ -91,7 +96,8 @@
 		(progn
 		  (setq cur-indent (current-indentation))
 		  (setq not-indented nil))
-	      (if (looking-at "^[ \t]*\\(if\\|else\\|for\\|while\\|subroutine\\)")
+	      (if (looking-at
+                   "^[ \t]*\\(if\\|else\\|for\\|while\\|subroutine\\)")
 		  (progn
 		    (setq cur-indent (+ (current-indentation) eviews-indent))
 		    (setq not-indented nil))
@@ -101,9 +107,44 @@
 	  (indent-line-to cur-indent)
 	(indent-line-to 0)))))
 
-;; --------------------------------------------------------------------------------
+(defun eviews-unindent ()
+  "Unindent current line as eviews code."
+  (interactive)
+  (indent-line-to (- (current-indentation) eviews-indent)))
+
+;; -----------------------------------------------------------------------------
+;;     Skeleton-abbrevs
+;; -----------------------------------------------------------------------------
+
+(define-skeleton eviews-if
+  "insert a if-then-endif structure"
+  nil > "if (" - ") then" \n > _ \n (eviews-unindent) "endif")
+
+(define-skeleton eviews-else
+  "insert a else structure after a if-then-else structure."
+  nil (eviews-unindent) "else" \n > _ \n)
+
+(define-skeleton eviews-for
+  "insert a if-then-endif structure"
+  nil > "for " - \n > _ \n (eviews-unindent) "next")
+
+(define-skeleton eviews-to
+  "insert a else structure after a if-then-else structure."
+  nil "to " - " step 1")
+
+(define-skeleton eviews-while
+  "insert a if-then-endif structure"
+  nil > "while " - \n > _ \n (eviews-unindent) "wend")
+
+(define-abbrev eviews-mode-abbrev-table "if" "" 'eviews-if)
+(define-abbrev eviews-mode-abbrev-table "else" "" 'eviews-else)
+(define-abbrev eviews-mode-abbrev-table "for" "" 'eviews-for)
+(define-abbrev eviews-mode-abbrev-table "to" "" 'eviews-to)
+(define-abbrev eviews-mode-abbrev-table "while" "" 'eviews-while)
+
+;; -----------------------------------------------------------------------------
 ;;     Key map
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (defvar eviews-mode-map
   (let ((eviews-mode-map (make-keymap)))
@@ -112,6 +153,6 @@
   "Keymap for eviews major mode.")
 
 
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (provide 'init-eviews-mode)

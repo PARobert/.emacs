@@ -1,42 +1,15 @@
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 ;; Filename : init-python-mode.el
 ;; Author : Pierre-Antoine ROBERT <pierre.antoine.ROBERT@ensae-paristech.fr>
 ;; 
 ;; Description : init file for python-mode.
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (require 'python-mode)
 
-(add-hook 'python-mode-hook (add-to-list 'company-backends 'company-jedi))
-(add-hook 'python-mode-hook (fci-mode t))
-
-;; Complétion par Company
-;; (set (make-local-variable 'py-electric-close-active-p) t)
-
-;; (set (make-local-variable 'py-auto-complete-p) nil)
-;; (set (make-local-variable 'py-auto-completion-mode-p) nil)
-;; (set (make-local-variable 'py-company-pycomplete-p) t)
-;; (set (make-local-variable 'py-complete-auto) 'py-complete)
-;; (set (make-local-variable 'py-complete-function) 'nil)
-
-;; (py-timer-close-completions-p )
-;; (py-complete-ac-sources )
-;; (py-shell-module-completion-code "")
-;; (py-ipython-module-completion-string "")
-
-(setq py-auto-fill-mode t)
-(setq py-comment-fill-column 80)
-(setq py-docstring-fill-column 80)
-(setq py-ask-about-save nil)
-(setq py-docstring-style 'django)
-(setq py-fontify-shell-buffer-p nil)
-(setq py-split-windows-on-execute-p t)
-(setq py-switch-buffers-on-execute-p nil)
-(setq py-shell-switch-buffers-on-execute-p t)
-
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 ;;     Functions
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (defun exist-ipython-p ()
   "Renvoie t si le buffer *ipython* existe et nil sinon"
@@ -49,9 +22,9 @@
   (set-buffer
    (pcase version
      ("2" (make-term "ipython" "/usr/bin/env" nil "ipython" (or filename "")
-                    "--TerminalIPythonApp.force_interact=True"))
+                    "--no-banner" "--no-autoindent" "--TerminalIPythonApp.force_interact=True"))
      ("3" (make-term "ipython" "/usr/bin/env" nil "ipython3" (or filename "")
-                    "--TerminalIPythonApp.force_interact=True"))))
+                    "--no-banner" "--no-autoindent" "--TerminalIPythonApp.force_interact=True"))))
   (term-mode)
   (term-char-mode)
   (switch-to-buffer "*ipython*"))
@@ -110,9 +83,28 @@
   (execute-ipython "*ipython*" my-text))
   (forward-line))
 
-;; --------------------------------------------------------------------------------
+
+;; -----------------------------------------------------------------------------
+;;     Skeleton-abbrev
+;; -----------------------------------------------------------------------------
+
+;; (define-skeleton python-equal
+;;   "insert spaces befor and after \'=\'"
+;;   nil
+;;   (if (not (looking-at "[:space:]"))
+;;       "= " -
+;;       -))
+
+;; (define-skeleton python-equal
+;;   "insert spaces befor and after \'=\'"
+;;   nil " = " -)
+
+;; (define-abbrev python-mode-abbrev-table "=" "" 'python-equal)
+
+
+;; -----------------------------------------------------------------------------
 ;;     Mode-map
-;; --------------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (defun mon-python-mode-map ()
   "Key bindings for python-mode."
@@ -127,5 +119,7 @@
 
 (add-hook 'python-mode-hook 'mon-python-mode-map)
 
+
+;; -----------------------------------------------------------------------------
 
 (provide 'init-python-mode)

@@ -52,8 +52,8 @@
 
 (defsubst my/header-dash-line ()
   "Insert dashed line."
-  (insert header-prefix-string)
-  (insert-char ?- fill-column)
+  (insert (header-prefix-string))
+  (insert-char ?- (- fill-column (length (header-prefix-string))))
   (insert "\n"))
 
 (defsubst my/header-blank ()

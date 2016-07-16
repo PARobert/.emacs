@@ -7,11 +7,9 @@
 
 (require 'color-theme)
 (require 'paren)
-(require 'fill-column-indicator)
 (require 'ido)
 (require 'yasnippet)
 (require 'math-symbol-lists)
-(require 'show-keys)
 (require 'redo+)
 
 

@@ -43,22 +43,9 @@
 (global-set-key (kbd "C-c I") 'load-user-init-file)
 (global-set-key (kbd "C-c C-l") 'demarrer-command-log)
 (global-set-key (kbd "C-c C-b") 'compile-current-window)
-(global-set-key (kbd "C-c g") 'magit-status)
 
 (global-set-key (kbd "<C-s-XF86AudioRaiseVolume>") 'flyspell-mode)
 (global-set-key (kbd "<C-M-XF86AudioRaiseVolume>") 'flyspell-buffer)
-
-
-;; --------------------------------------------------------------------------------
-;;     Lua-mode
-;; --------------------------------------------------------------------------------
-
-(defun mon-lua-mode-map ()
-  "Définition des raccourcis clavier du lua-mode"
-  (local-set-key (kbd "<C-return>") 'lua-send-line-or-region)
-  (local-set-key (kbd "<C-M-return>") 'lua-send-buffer))
-
-(add-hook 'lua-mode-hook 'mon-lua-mode-map)
 
 ;; --------------------------------------------------------------------------------
 ;;     Terminal

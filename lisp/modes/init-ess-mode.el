@@ -8,7 +8,6 @@
 (require 'ess)
 
 (autoload 'R-mode "ess-site.el" "ESS" t)
-(add-hook 'ess-mode-hook '(company-statistics-mode t))
 
 (setq ess-ask-for-ess-directory nil)
 (setq comint-input-ring-size 1000)
